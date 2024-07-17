@@ -543,14 +543,14 @@ server <- function(input, output, session) {
       mutate(`Was this remote?` = "Yes") %>%
       mutate(`What type of question is this?` = "Research/Reference") %>%
       mutate(`Who in DRS answered this question?` = input$empType) %>% 
-      mutate(`Department`) = input$department %>% 
-      mutate(`Department`) = case_when(
+      mutate(`Department` = input$dept) %>% 
+      mutate(`Department` = case_when(
         grepl("planning", Department, ignore.case = TRUE) ~ "City and Regional Planning",
         grepl("geog", Department, ignore.case = TRUE) ~ "Geography",
-        grepl("geog", Department, ignore.case = TRUE) ~ "Geography"
-      )
+        .default = Department
+      )) %>% 
       select(`Start Date`, `Internal Notes`, `Entered By`, `Additional Information (optional)` = input$addInfo, 
-             `Department` = input$dept, `More Details`, `Name(s)`, `Other Details`, `Other Referral:`, `Referred to:`, 
+             `Department`, `More Details`, `Name(s)`, `Other Details`, `Other Referral:`, `Referred to:`, 
              `Was this a non-desk question?`, `Was this an email question?`, `Was this remote?`, 
              `What type of question is this?`, `Who in DRS answered this question?`, `Patron Type` = input$patronType)
     
