@@ -6,7 +6,7 @@ The fastest way to download AutoStats is to have git installed on your machine a
 3. Once the file has downloaded, **right click** on it and select **Extract All...** Because there are many small files, it will take upwards of **10-15 minutes** to extract. This is an issue I hope to address in a future version of AutoStats.
 # Running Autostats
 **REQUIRES: Windows and Google Chrome**
-1. Open the AutoStats folder.
+1. Open the **AutoStats folder**.
 2. Double click on **AutoStats.exe** (custom icon coming soon!)
 3. The first time you run AutoStats, it may take a while to load, but eventually, Google Chrome will open and you will be able to use the program.
 # Problems with AutoStats
