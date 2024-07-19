@@ -10,4 +10,4 @@ The fastest way to download AutoStats is to have git installed on your machine a
 2. Double click on **AutoStats.exe** (custom icon coming soon!)
 3. The first time you run AutoStats, it may take a while to load, but eventually, Google Chrome will open and you will be able to use the program.
 # Problems with AutoStats
-Please create a ticket for any problems you encounter with AutoStats by going to the **Issues** tab at the top of the GitHub repository and clickon on the **New Issue** button at the top right.
+Please create a ticket for any problems you encounter with AutoStats by going to the **Issues** tab at the top of the GitHub repository and clicking on on the **New Issue** button at the top right.
