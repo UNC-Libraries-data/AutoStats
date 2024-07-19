@@ -1,4 +1,4 @@
-# How to Download and Install AutoStats
+# How to Download and Install AutoStats 2.0.0
 The fastest way to download AutoStats is to have git installed on your machine and to **clone this repository**. If you don't know how to do that, you can instead download a zip file.
 ## Download a Zip File
 1. Click on the green **<> Code** button at the top right of the page.
