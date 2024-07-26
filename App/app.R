@@ -54,8 +54,8 @@ ui <- fluidPage(
                     .stepFour {height: 250px; line-height: 200px;}
                     .download {vertical-align: middle; line-height: normal; display: inline-block;}
                     @keyframes yellowfade {from {background: #ffffb3;} to {background: #d3e8f7;}}
-                    #step4bkd {animation-name: yellowfade; animation-duration: 5s;}
-                    #step4BkdEmails {animation-name: yellowfade; animation-duration: 5s;}
+                    #appt4 {animation-name: yellowfade; animation-duration: 5s;}
+                    #emappt4 {animation-name: yellowfade; animation-duration: 5s;}
                     "))
   ),
   
@@ -74,8 +74,8 @@ ui <- fluidPage(
   
   
   # Choose Appointments or Emails
-  conditionalPanel(class = "stepRowConditional", id = "first",
-                   condition = "input.appts == 0 & input.emails == 0",
+  hidden(conditionalPanel(class = "stepRowConditional", id = "first",
+                   condition = "",
                    fluidRow(
                      column(12,
                             div(
@@ -85,11 +85,11 @@ ui <- fluidPage(
                             )
                      )
                    )
-  ),
+  )),
   
   # Appointments Step 1 ----
-  conditionalPanel(class = "stepRowConditional",
-                   condition = "input.appts > 0",
+  hidden(conditionalPanel(class = "stepRowConditional", id = "appt1",
+                   condition = "",
                    fluidRow(class = "stepRow",
                             column(3,
                                    div(class = "stepNum",
@@ -109,11 +109,11 @@ ui <- fluidPage(
                                    )
                             )
                    )
-  ),
+  )),
   
   # Appointments Step 2 ----
-  conditionalPanel(class = "stepRowConditional",
-                   condition = "input.appts > 0",
+  hidden(conditionalPanel(class = "stepRowConditional", id = "appt2",
+                   condition = "",
                    fluidRow(class = "stepRow",
                             column(3,
                                    div(class = "stepNum",
@@ -144,11 +144,11 @@ ui <- fluidPage(
                                    )
                             )
                    )
-  ),
+  )),
   
   # Appointments Step 3 ----
-  conditionalPanel(class = "stepRowConditional",
-                   condition = "output.gotFile",
+  hidden(conditionalPanel(class = "stepRowConditional", id = "appt3",
+                   condition = "",
                    fluidRow(
                      column(3,
                             div(class = "stepNum",
@@ -187,11 +187,11 @@ ui <- fluidPage(
                             )
                      )
                    )
-  ),
+  )),
   
   # Appointments Step 4 ----
-  conditionalPanel(class = "stepRowConditional", id = "step4bkd",
-                   condition = "output.doneDragging",
+  hidden(conditionalPanel(class = "stepRowConditional", id = "appt4",
+                   condition = "",
                    div(id="step4anchor"),
                    fluidRow(
                      column(3,
@@ -210,11 +210,11 @@ ui <- fluidPage(
                             )
                      )
                    )
-  ),
+  )),
   
   # Appointments Step 5 ----
-  conditionalPanel(class = "stepRowConditional",
-                   condition = "output.doneDragging",
+  hidden(conditionalPanel(class = "stepRowConditional", id = "appt5",
+                   condition = "",
                    fluidRow(
                      column(3,
                             div(class = "stepNum",
@@ -233,12 +233,15 @@ ui <- fluidPage(
                                 p(HTML("Your stats have now been recorded!"))
                             )
                      )
+                   ),
+                   fluidRow(
+                     actionButton("restart", "Start Over")
                    )
-  ),
+  )),
   
   # Emails Step 1 ----
-  conditionalPanel(class = "stepRowConditional",
-                   condition = "input.emails > 0",
+  hidden(conditionalPanel(class = "stepRowConditional", id = "emappt1",
+                   condition = "",
                    fluidRow(class = "stepRow",
                             column(3,
                                    div(class = "stepNum",
@@ -257,11 +260,11 @@ ui <- fluidPage(
                                    )
                             )
                    )
-  ),
+  )),
   
   # Emails Step 2 ----
-  conditionalPanel(class = "stepRowConditional",
-                   condition = "input.emails > 0",
+  hidden(conditionalPanel(class = "stepRowConditional", id = "emappt2",
+                   condition = "",
                    fluidRow(class = "stepRow",
                             column(3,
                                    div(class = "stepNum",
@@ -280,11 +283,11 @@ ui <- fluidPage(
                                    )
                             )
                    )
-  ),
+  )),
   
   # Emails Step 3 ----
-  conditionalPanel(class = "stepRowConditional",
-                   condition = "input.emails > 0",
+  hidden(conditionalPanel(class = "stepRowConditional", id = "emappt3",
+                   condition = "",
                    fluidRow(class = "stepRow",
                             id="step3anchor-emails",
                             column(3,
@@ -319,12 +322,12 @@ ui <- fluidPage(
                                    )
                             )
                    )
-  ),
+  )),
   
   # Emails Step 4 ----
-  conditionalPanel(class = "stepRowConditional",
-                   id = "step4BkdEmails",
-                   condition = "output.validated",
+  hidden(conditionalPanel(class = "stepRowConditional",
+                   id = "emappt4",
+                   condition = "",
                    div(id="step4anchor-emails", ""),
                    fluidRow(
                      column(3,
@@ -343,11 +346,11 @@ ui <- fluidPage(
                             )
                      )
                    )
-  ),
+  )),
   
   # Emails Step 5 ----
-  conditionalPanel(class = "stepRowConditional",
-                   condition = "output.validated",
+  hidden(conditionalPanel(class = "stepRowConditional", id = "emappt5",
+                   condition = "",
                    fluidRow(
                      column(3,
                             div(class = "stepNum",
@@ -366,15 +369,36 @@ ui <- fluidPage(
                                 p(HTML("Your stats have now been recorded!"))
                             )
                      )
+                   ),
+                   fluidRow(
+                     actionButton("restart", "Start Over")
                    )
   )
-)
+))
 
 
 
 # server ----
 server <- function(input, output, session) {
   
+  ##### HOME PAGE -----
+
+  #Show the right steps at the right time
+  showElement("first")
+  
+  observeEvent(input$appts, {
+    hideElement("first")
+    showElement("appt1")
+    showElement("appt2")
+  })
+  
+  observeEvent(input$emails, {
+    hideElement("first")
+    showElement("emappt1")
+    showElement("emappt2")
+    showElement("emappt3")
+  })
+
   ###### LIBCAL APPOINTMENTS ------  
   
   # check if file is uploaded
@@ -385,6 +409,7 @@ server <- function(input, output, session) {
   
   # jump to step 3 after a file is uploaded
   observeEvent(input$rawAppt, {
+    showElement("appt3")
     delay(1000, runjs("document.getElementById('step3anchor').scrollIntoView({behavior: 'smooth'});"))
   })
   
@@ -396,6 +421,8 @@ server <- function(input, output, session) {
   
   # jump to step 4 after dragging is done
   observeEvent(input$send, {
+    showElement("appt4")
+    showElement("appt5")
     delay(1000, runjs("document.getElementById('step4anchor').scrollIntoView({behavior: 'smooth'});"))
   })
   
@@ -405,9 +432,7 @@ server <- function(input, output, session) {
       if (length(read_csv(fPath)) < 20
           | names(read_csv(fPath))[20] != "Internal Notes") {
         if(blank == FALSE) {        
-          "The file you uploaded doesn't have the correct columns. Please upload a different file."
-        } else {
-          ""
+          "The file you uploaded doesn't have the correct columns. Please scroll up and upload a different file."
         }
       }
     }
@@ -516,6 +541,15 @@ server <- function(input, output, session) {
     # read the csv
     dfInFile <- read_csv(input$rawAppt$datapath)
     
+    #Rename Status field
+    if("Status...14" %in% names(dfInFile)) {
+      dfInFile <- dfInFile %>% 
+        rename(`Appt Status` = Status...14)
+    } else {
+      dfInFile <- dfInFile %>% 
+        rename(`Appt Status` = Status)
+    }
+    
     # get user's full name
     name <- reactive({
       fullname <- paste(input$fName, input$lName)
@@ -528,7 +562,7 @@ server <- function(input, output, session) {
     
     # create outgoing dataframe
     dfOutFile <- dfInFile %>% 
-      filter(`Status` != "Cancelled") %>% 
+      filter(`Appt Status` != "Cancelled") %>% 
       mutate(`Date` = parse_date_time(Date, orders = c("mdy","ymd"), tz = "America/New_York")) %>% 
       mutate(`Start Date` = paste(Date,`Start Time`)) %>% 
       mutate(`Internal Notes` = paste("AutoStats upload; Booking ID:", `Booking ID`)) %>% 
@@ -543,14 +577,8 @@ server <- function(input, output, session) {
       mutate(`Was this remote?` = "Yes") %>%
       mutate(`What type of question is this?` = "Research/Reference") %>%
       mutate(`Who in DRS answered this question?` = input$empType) %>% 
-      mutate(`Department` = input$dept) %>% 
-      mutate(`Department` = case_when(
-        grepl("planning", Department, ignore.case = TRUE) ~ "City and Regional Planning",
-        grepl("geog", Department, ignore.case = TRUE) ~ "Geography",
-        .default = Department
-      )) %>% 
-      select(`Start Date`, `Internal Notes`, `Entered By`, `Additional Information (optional)` = input$addInfo, 
-             `Department`, `More Details`, `Name(s)`, `Other Details`, `Other Referral:`, `Referred to:`, 
+      select(`Start Date`, `Internal Notes`, `Entered By`, `Additional Information (optional)` = input$addInfo,
+             `Department` = input$dept, `More Details`, `Name(s)`, `Other Details`, `Other Referral:`, `Referred to:`, 
              `Was this a non-desk question?`, `Was this an email question?`, `Was this remote?`, 
              `What type of question is this?`, `Who in DRS answered this question?`, `Patron Type` = input$patronType)
     
@@ -571,22 +599,39 @@ server <- function(input, output, session) {
   
   ###### EMAIL CONSULTS -----
   
-  # stop leaving step 3 while validating file
   observeEvent(input$rawEmails, {
+    
+    # stop leaving step 3 while validating
     runjs("document.getElementById('step3anchor-emails').scrollIntoView();")
+    
+    # validate CSV
+    output$emVal <- renderUI({
+      
+      # make sure we have a name and the file is correct
+      validate(
+        need(input$emfName, "Please enter your first name."),
+        need(input$emlName, "Please enter your last name."),
+        need(str_sub(tolower(input$rawEmails$datapath), -3) == "csv", "The file you uploaded isn't a CSV file. Please upload a different file."),
+        validateEmailCSV(input$rawEmails$datapath)
+      )
+      
+      # proceed to step 4
+      output$validated <- reactive({
+        return(TRUE)
+      })
+      
+      showElement("emappt4")
+      showElement("emappt5")
+      delay(500, runjs("document.getElementById('step4anchor-emails').scrollIntoView({behavior: 'smooth'});"))
+      
+    })
   })
-  
-  # check if file is uploaded
-  output$gotEmails <- reactive({
-    return(!is.null(input$rawEmails))
-  })
-  outputOptions(output, "gotEmails", suspendWhenHidden = FALSE)
   
   # make sure CSV file has the right columns
   validateEmailCSV <- function(fPath) {
     
     emfile <- read_csv(fPath)
-    
+
     if (str_sub(tolower(fPath), -3) == "csv") {
       if (!("Received" %in% names(emfile))) {
         "The file you uploaded doesn't have the correct columns. Please upload a different file."
@@ -599,26 +644,7 @@ server <- function(input, output, session) {
     }
   }
   
-  # validate CSV
-  output$emVal <- renderUI({
-    
-    # make sure we have a name and the file is correct
-    validate(
-      need(input$emfName, "Please enter your first name."),
-      need(input$emlName, "Please enter your last name."),
-      need(str_sub(tolower(input$rawEmails$datapath), -3) == "csv", "The file you uploaded isn't a CSV file. Please upload a different file."),
-      validateEmailCSV(input$rawEmails$datapath)
-    )
-    
-    # proceed to step 4
-    output$validated <- reactive({
-      return(TRUE)
-    })
-    outputOptions(output, "validated", suspendWhenHidden = FALSE)
-    
-    delay(500, runjs("document.getElementById('step4anchor-emails').scrollIntoView({behavior: 'smooth'});"))
-    
-  })
+ 
   
   output$dlEmailFile <- downloadHandler(
     
@@ -626,7 +652,8 @@ server <- function(input, output, session) {
     content = function(file) {
       
       # read the csv
-      dfInFile <- read_csv(input$rawEmails$datapath)
+      dfInFile <- read_csv(input$rawEmails$datapath, 
+                           name_repair = ~ make.names(., unique = TRUE))
       
       #get user's full name
       name <- reactive({
@@ -665,7 +692,39 @@ server <- function(input, output, session) {
     }
   )
   
-  ###### END SESSION ----
+  ###### END OR RESTART SESSION ----
+  
+  # Restart button
+  observeEvent(input$restart, {
+    
+    # Turn off all steps except the first
+    hideElement("appt1")
+    hideElement("appt2")
+    hideElement("appt3")
+    hideElement("appt4")
+    hideElement("appt5")
+    hideElement("emappt1")
+    hideElement("emappt2")
+    hideElement("emappt3")
+    hideElement("emappt4")
+    hideElement("emappt5")
+    showElement("first")
+    
+    # reset inputs
+    reset("fName")
+    reset("lName")
+    reset("rawAppt")
+    reset("emfName")
+    reset("emlName")
+    reset("rawEmails")
+    reset("inQuest")
+    reset("patronType")
+    reset("dept")
+    reset("addInfo")
+    
+  })
+  
+  # Close tab
   session$onSessionEnded(function() {
     stopApp()
   })
