@@ -40,7 +40,7 @@ ui <- fluidPage(
                     .stepContent img {border: #cccccc 1px solid; margin-bottom: 40px; max-width:600px}
                     .stepContent p {max-width: 700px;}
                     .stepContent p a {font-weight: 700; color: #23527c; text-decoration: underline;}
-                    .note {color: #A80604; font-style: italic; font-weight: 700;}
+                    .note {color: #cd6505; font-style: italic; font-weight: 700;}
                     .nameField {display: inline-block;}
                     .form-group {display: inline;}
                     .radioButtons {margin: 20px 0px}
@@ -429,10 +429,11 @@ server <- function(input, output, session) {
   # make sure CSV file has the right columns
   validateCSV <- function(fPath, blank = FALSE) {
     if (str_sub(tolower(fPath), -3) == "csv") {
-      if (length(read_csv(fPath)) < 20
-          | names(read_csv(fPath))[20] != "Internal Notes") {
+      if (names(read_csv(fPath))[1] != "Booking ID" &
+          names(read_csv(fPath))[2] != "With" &
+          names(read_csv(fPath))[3] != "Name") {
         if(blank == FALSE) {        
-          "The file you uploaded doesn't have the correct columns. Please scroll up and upload a different file."
+          "!!ERROR ENCOUNTERED!! The file you uploaded doesn't have the correct columns. Please scroll up and upload a different file."
         }
       }
     }
@@ -443,7 +444,9 @@ server <- function(input, output, session) {
     
     dfInFile <- read_csv(input$rawAppt$datapath)
     
-    questNames <- names(dfInFile[21:length(dfInFile)])
+    questStart <- which(names(dfInFile) == "Internal Notes") + 1
+    
+    questNames <- names(dfInFile[questStart:length(dfInFile)])
     
     return(questNames)
     
