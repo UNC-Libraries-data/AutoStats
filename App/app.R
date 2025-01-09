@@ -56,6 +56,7 @@ ui <- fluidPage(
                     @keyframes yellowfade {from {background: #ffffb3;} to {background: #d3e8f7;}}
                     #appt4 {animation-name: yellowfade; animation-duration: 5s;}
                     #emappt4 {animation-name: yellowfade; animation-duration: 5s;}
+                    #inst5 {animation-name: yellowfade; animation-duration: 5s;}
                     "))
   ),
   
@@ -73,7 +74,7 @@ ui <- fluidPage(
   ),
   
   
-  # Choose Appointments or Emails
+  # Choose Appointments, Emails or Instruction
   hidden(conditionalPanel(class = "stepRowConditional", id = "first",
                    condition = "",
                    fluidRow(
@@ -81,7 +82,8 @@ ui <- fluidPage(
                             div(
                               p(class = "header", "I want to..."),
                               actionButton("appts", "Upload LibCal Appointments"),
-                              actionButton("emails", "Upload Email Consultations")
+                              actionButton("emails", "Upload Email Consultations"),
+                              actionButton("instruction", "Upload Instruction Sessions")
                             )
                      )
                    )
@@ -371,17 +373,169 @@ ui <- fluidPage(
                      )
                    ),
                    fluidRow(
-                     actionButton("restart", "Start Over")
+                     actionButton("emRestart", "Start Over")
                    )
-  )
-))
+  )),
+
+  # Instruction Step 1 ----
+  hidden(conditionalPanel(class = "stepRowConditional", id = "inst1",
+                          condition = "",
+                          fluidRow(class = "stepRow",
+                                   column(3,
+                                          div(class = "stepNum",
+                                              p(class = "num", 1),
+                                              p(class = "stepTitle", "Copy instruction request form.")
+                                          )
+                                   ),
+                                   column(9,
+                                          div(class = "stepContent",
+                                              p(HTML("<strong>Highlight all of the text</strong> in the instruction request form in your email.")),
+                                              p(HTML("<strong>Right-click</strong> and select <strong>copy</strong>.")),
+                                              img(src = "images/inst_step1.png")
+                                          )
+                                   )
+                          )
+  )),
+  # Instruction Step 2 ----
+  hidden(conditionalPanel(class = "stepRowConditional", id = "inst2",
+                          condition = "",
+                          fluidRow(class = "stepRow",
+                                   column(3,
+                                          div(class = "stepNum",
+                                              p(class = "num", 2),
+                                              p(class = "stepTitle", "Paste as plain text.")
+                                          )
+                                   ),
+                                   column(9,
+                                          div(class = "stepContent",
+                                              p(HTML("<strong>Open a text editor</strong> and <strong>paste the text</strong> into a new file.")),
+                                              p(HTML("Do not inlcude formatting. It should look similar to the screenshot below:")),
+                                              img(src = "images/inst_step2.png")
+                                          )
+                                   )
+                          )
+  )),
+  # Instruction Step 3 ----
+  hidden(conditionalPanel(class = "stepRowConditional", id = "inst3",
+                          condition = "",
+                          fluidRow(class = "stepRow",
+                                   column(3,
+                                          div(class = "stepNum",
+                                              p(class = "num", 3),
+                                              p(class = "stepTitle", "Save the text file.")
+                                          )
+                                   ),
+                                   column(9,
+                                          div(class = "stepContent",
+                                              p(HTML("<strong>Save</strong> as a <strong>.txt</strong> file.")),
+                                              p(HTML("The <strong>file name</strong> should include the <strong>date</strong> that the instruction session <strong>actually occured</strong>.")),
+                                              p(HTML("<strong>You must use the following naming convention: instruction_mm-dd-yyyy.</strong> See the screenshot below:")),
+                                              img(src = "images/inst_step3.png")
+                                          )
+                                   )
+                          )
+  )),
+  
+  # Instruction Step 4 ----
+  hidden(conditionalPanel(class = "stepRowConditional", id = "inst4",
+                          condition = "",
+                          fluidRow(class = "stepRow",
+                                   id="step4anchor-inst",
+                                   column(3,
+                                          div(class = "stepNum",
+                                              p(class = "num", 4),
+                                              p(class = "stepTitle", "Upload text files.")
+                                          )
+                                   ),
+                                   column(9,
+                                          div(class = "stepContent",
+                                              p(HTML("Fill out the form below and upload <strong>ALL</strong> of the text files.")),
+                                              p(class = "note", "NOTE: To select multiple files at once, hold down the shift key while clicking."),
+                                              
+                                              # Inputs for Name(s)
+                                              div(class = "nameField", textInput("instfName", "First Name")),
+                                              div(class = "nameField", textInput("instlName", "Last Name")),
+                                              
+                                              # Inputs for Who in DRS answered this question?
+                                              div(class = "radioButtons", 
+                                                  radioButtons("inst_empType", "I am a...", 
+                                                               c("Staff Member" = "Library Staff", 
+                                                                 "Student Consultant" = "Student Assistant"))),
+                                              
+                                              # Upload appointments file
+                                              div(class = "fileUpload",
+                                                  fileInput("rawText", 
+                                                            "Upload all text files", 
+                                                            multiple = TRUE, accept = ".txt")
+                                              ),
+                                              
+                                              conditionalPanel(condition = "output.gotText", div(uiOutput("instVal")))
+                                              
+                                          )
+                                   )
+                          )
+  )),
+  
+  # Instruction Step 5 ----
+  hidden(conditionalPanel(class = "stepRowConditional",
+                          id = "inst5",
+                          condition = "",
+                          div(id="step5anchor-inst", ""),
+                          fluidRow(
+                            column(3,
+                                   div(class = "stepNum",
+                                       p(class= "num", 5),
+                                       p(class = "stepTitle", "Save the AutoStats File.")
+                                   )
+                            ),
+                            column(9,
+                                   div(class = "stepContent stepFour",
+                                       div(class = "download",
+                                           p(HTML("<strong>Click on the button below to download an AutoStats file.</strong>")),
+                                           downloadButton("dlInstFile", "Download")
+                                       )
+                                       
+                                   )
+                            )
+                          )
+  )),
+  
+  # Instruction Step 6 ----
+  hidden(conditionalPanel(class = "stepRowConditional", id = "inst6",
+                          condition = "",
+                          fluidRow(
+                            column(3,
+                                   div(class = "stepNum",
+                                       p(class = "num", 6),
+                                       p(class = "stepTitle", "Upload the AutoStats File to LibInsight.")
+                                   )
+                            ),
+                            column(9,
+                                   div(class = "stepContent",
+                                       p(HTML("Log into LibInsights. Under Shortcuts, select a dataset from the <strong>Record Data to</strong> menu.")),
+                                       img(src = "images/step5a.jpg"),
+                                       p(HTML("Click on the <strong>Record Data button</strong>, and press <strong>Upload File</strong>.")),
+                                       img(src = "images/step5b.jpg"),
+                                       p(HTML("Scroll down to the bottom of the page. Click on <strong>Choose File</strong> and select your AutoStats file. Do not make any other selections. Click the <strong>Upload Data</strong> button.")),
+                                       img(src = "images/step5c.jpg"),
+                                       p(HTML("Your stats have now been recorded!"))
+                                   )
+                            )
+                          ),
+                          fluidRow(
+                            actionButton("instRestart", "Start Over")
+                          )
+  ))
+
+)
+
 
 
 
 # server ----
 server <- function(input, output, session) {
   
-  ##### HOME PAGE -----
+  ###### HOME PAGE -----
 
   #Show the right steps at the right time
   showElement("first")
@@ -398,8 +552,35 @@ server <- function(input, output, session) {
     showElement("emappt2")
     showElement("emappt3")
   })
+  
+  observeEvent(input$instruction, {
+    hideElement("first")
+    showElement("inst1")
+    showElement("inst2")
+    showElement("inst3")
+    showElement("inst4")
+  })
 
   ###### LIBCAL APPOINTMENTS ------  
+  
+  #Function for renaming status fields. X is the uploaded libcal spreadsheet.
+  #Returns a dataframe with new names.
+  renStat <- function(x){
+    
+    lCols <- tolower(names(x))
+    statCols <- which(str_detect(lCols, "status"))
+    statN <- length(statCols)
+    sc1 <- statCols[1]
+    
+    names(x)[sc1] <- "Appt Status"
+    
+    if(statN > 1) { 
+      sc2 <- statCols[2]
+      names(x)[sc2] <- "Status"
+    }
+    
+    return(x)
+  }
   
   # check if file is uploaded
   output$gotFile <- reactive({
@@ -428,10 +609,13 @@ server <- function(input, output, session) {
   
   # make sure CSV file has the right columns
   validateCSV <- function(fPath, blank = FALSE) {
+    
+    csvNames <- names(read_csv(fPath))
+    
     if (str_sub(tolower(fPath), -3) == "csv") {
-      if (names(read_csv(fPath))[1] != "Booking ID" &
-          names(read_csv(fPath))[2] != "With" &
-          names(read_csv(fPath))[3] != "Name") {
+      if (csvNames[1] != "Booking ID" &
+          csvNames[2] != "With" &
+          csvNames[3] != "Name") {
         if(blank == FALSE) {        
           "!!ERROR ENCOUNTERED!! The file you uploaded doesn't have the correct columns. Please scroll up and upload a different file."
         }
@@ -441,15 +625,10 @@ server <- function(input, output, session) {
   
   # get appointment questions from file
   questList <- reactive({
-    
-    dfInFile <- read_csv(input$rawAppt$datapath)
-    
+    dfInFile <- renStat(read_csv(input$rawAppt$datapath))
     questStart <- which(names(dfInFile) == "Internal Notes") + 1
-    
     questNames <- names(dfInFile[questStart:length(dfInFile)])
-    
     return(questNames)
-    
   })
   
   # generate appointment questions list
@@ -542,16 +721,7 @@ server <- function(input, output, session) {
   dfOutFile <- eventReactive(input$send, {
     
     # read the csv
-    dfInFile <- read_csv(input$rawAppt$datapath)
-    
-    #Rename Status field
-    if("Status...14" %in% names(dfInFile)) {
-      dfInFile <- dfInFile %>% 
-        rename(`Appt Status` = Status...14)
-    } else {
-      dfInFile <- dfInFile %>% 
-        rename(`Appt Status` = Status)
-    }
+    dfInFile <- renStat(read_csv(input$rawAppt$datapath))
     
     # get user's full name
     name <- reactive({
@@ -647,8 +817,6 @@ server <- function(input, output, session) {
     }
   }
   
- 
-  
   output$dlEmailFile <- downloadHandler(
     
     filename = paste("AutoStatsEmails-", Sys.Date(), ".csv", sep = ""),
@@ -695,9 +863,125 @@ server <- function(input, output, session) {
     }
   )
   
-  ###### END OR RESTART SESSION ----
+  ###### INSTRUCTION SESSIONS -----
   
-  # Restart button
+  observeEvent(input$rawText, {
+    
+    # stop leaving step 4 while validating
+    runjs("document.getElementById('step4anchor-inst').scrollIntoView();")
+    
+    # validate TXT
+    output$instVal <- renderUI({
+
+      # make sure we have a name and the files are correct
+      validate(
+        need(input$instfName, "Please enter your first name."),
+        need(input$instlName, "Please enter your last name."),
+        validateInstTXT(input$rawText)
+      )
+
+      # proceed to step 5
+      output$validated <- reactive({
+        return(TRUE)
+      })
+
+      showElement("inst5")
+      showElement("inst6")
+      delay(500, runjs("document.getElementById('step5anchor-inst').scrollIntoView({behavior: 'smooth'});"))
+
+    })
+  })
+  
+  # make sure files are TXT and have the right content
+  validateInstTXT <- function(x) {
+
+    for(i in 1:nrow(x)){
+      
+      fName <- x$name[i]
+      content <- read_file(x$datapath[i])
+
+      if (str_sub(tolower(fName), -3) != "txt") {
+        return(paste(fName, "isn't a TXT file. Please upload a different file."))
+      } else if (str_sub(content, 1, 13) != "Type of Class") {
+        return(paste(fName, "doesn't appear to be an instruction request. Please upload a different file."))
+      } else if (!str_detect(fName, "instruction_\\d{2}-\\d{2}-\\d{4}.txt")) {
+        return(paste(fName, "doesn't follow required naming conventions for instruction session uploads. Please check Step 3 and rename the file."))
+      }
+      
+    }
+    
+  }
+  
+  output$dlInstFile <- downloadHandler(
+    
+    filename = paste("AutoStatsInstruction-", Sys.Date(), ".csv", sep = ""),
+    content = function(file) {
+      
+      # create a dataframe from the text files
+      rawText <- input$rawText
+      forms <- vector()
+      
+      for(i in 1:nrow(input$rawText)){
+        text <- read_file(input$rawText$datapath[i])
+        forms <- c(forms, text)
+      }
+      
+      #get user's full name
+      name <- reactive({
+        fullname <- paste(input$instfName, input$instlName)
+        return(fullname)
+      })
+      
+      #get user's account name
+      acct <- reactive({
+        revname <- paste(input$instlName, input$instfName, sep = ", ")
+        return(revname)
+      })
+      
+      # create outgoing dataframe
+      dfOutFileInst <- rawText %>%
+        mutate(form = forms) %>% 
+        mutate(rawDate = str_sub(name, 13, 22)) %>% 
+        mutate(rawTime = str_extract(form, "\\d\\d:\\d\\d\\s.+")) %>%
+        mutate(rawDateTime = paste(rawDate, rawTime)) %>% 
+        mutate(parsedDateTime = parse_date_time(rawDateTime, "%m-%d-%Y %H:%M %p")) %>% 
+        mutate(`Instruction Date` = format(parsedDateTime, "%Y/%m/%d %H:%M")) %>%
+        mutate(`Internal Notes` = "AutoStats upload; Instruction session") %>% 
+        mutate(`Service Point/Library Department` = acct()) %>%
+        mutate(course = str_extract(form, "(Course Department and Number\\s+)(.+)", 2)) %>%
+        mutate(courseNum = str_extract(course, "\\d+")) %>% 
+        mutate(`Course Department` = str_extract(course, "[a-zA-Z ]+")) %>% 
+        mutate(`Course Instructor` = str_extract(form, "(Instructor Name\\s+)(.+)", 2)) %>% 
+        mutate(`Course Instructor Email` = str_extract(form, "(Instructor Email\\s+)(.+)", 2)) %>% 
+        mutate(`Duration in minutes` = str_extract(form, "(Class Length\\s+)(\\d+)", 2)) %>%
+        mutate(inPerson = str_extract(form, "(taught in-person\\?\\s+)(.+)", 2)) %>%
+        mutate(`Instruction Location`= ifelse(
+          inPerson == "Yes", "On campus but not in a library", "Remote")) %>%
+        mutate(`Instruction Type` = "Course Related (include dept/number)") %>%
+        mutate(`Is this continuing education?` = "") %>%
+        mutate(`Number of participants` = str_extract(form, "(Number of Students\\s+)(\\d+)", 2)) %>%
+        mutate(`Staff Department(s)` = "DRS") %>%
+        mutate(`Staff Name(s)` = name()) %>%
+        mutate(`Staff Type` = input$inst_empType) %>%
+        #This field is populated based on course numbering conventions (https://catalog.unc.edu/courses/course-numbering/)
+        mutate(`Type of participants`= case_when(
+          courseNum <= 399 ~ "UNC Undergraduate",
+          courseNum >= 400 & courseNum <= 699 ~ "UNC Graduate Students; UNC Undergraduate",
+          courseNum >= 700 ~ "UNC Graduate Students",)) %>% 
+        select(`Instruction Date`, `Internal Notes`, `Service Point/Library Department`, 
+               `Course Department`, `Course Instructor`, `Course Instructor Email`, 
+               `Duration in minutes`, `Instruction Location`, `Instruction Type`, 
+               `Is this continuing education?`, `Number of participants`, 
+               `Staff Department(s)`, `Staff Name(s)`, `Staff Type`, 
+               `Type of participants`)
+      
+      write_csv(dfOutFileInst, file, na = "")
+      
+    }
+  )
+  ###### RESTART SESSION ----
+  
+  # Restart buttons
   observeEvent(input$restart, {
     
     # Turn off all steps except the first
@@ -706,6 +990,22 @@ server <- function(input, output, session) {
     hideElement("appt3")
     hideElement("appt4")
     hideElement("appt5")
+    showElement("first")
+    
+    # reset inputs
+    reset("fName")
+    reset("lName")
+    reset("rawAppt")
+    reset("inQuest")
+    reset("patronType")
+    reset("dept")
+    reset("addInfo")
+    
+  })
+  
+  observeEvent(input$emRestart, {
+    
+    # Turn off all steps except the first
     hideElement("emappt1")
     hideElement("emappt2")
     hideElement("emappt3")
@@ -714,18 +1014,29 @@ server <- function(input, output, session) {
     showElement("first")
     
     # reset inputs
-    reset("fName")
-    reset("lName")
-    reset("rawAppt")
     reset("emfName")
     reset("emlName")
     reset("rawEmails")
-    reset("inQuest")
-    reset("patronType")
-    reset("dept")
-    reset("addInfo")
     
   })
+
+  observeEvent(input$instRestart, {
+    
+    # Turn off all steps except the first
+    hideElement("inst1")
+    hideElement("inst2")
+    hideElement("inst3")
+    hideElement("inst4")
+    hideElement("inst5")
+    hideElement("inst6")
+    showElement("first")
+    
+    # reset inputs
+    reset("instfName")
+    reset("instlName")
+    reset("rawText")
+  })
+  
   
   # Close tab
   session$onSessionEnded(function() {
