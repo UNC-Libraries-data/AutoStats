@@ -1,9 +1,0 @@
-{
-    "path": "~/_Admin/stats/LibInsight/AutoStats/App",
-    "sortOrder": [
-        {
-            "columnIndex": 2,
-            "ascending": true
-        }
-    ]
-}
