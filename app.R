@@ -154,7 +154,7 @@ ui_help <- div(class = "main",
                div(class = "alert",
                    h6(icon("triangle-exclamation"), class = "alert-title", "WARNING"),
                    p(class="alert-content",
-                     "AutoStats cannot read any LibCal records with a date prior to July, 2025. Files with records prior to that date will generate an error."
+                     "AutoStats cannot read any LibCal records with a date prior to September, 2025. Files with records prior to that date will generate an error."
                    )
                    ),
                h5("Download a CSV file from LibCal."),
@@ -266,6 +266,7 @@ ui <- fluidPage(
   
   useShinyjs(),
   tags$head(
+    tags$title(paste("AutoStats", vn)),
     tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
   ),
   
@@ -361,6 +362,7 @@ server <- function(input, output) {
     req(input$libcalUp)
     
     libCaldf <- read_csv(input$libcalUp$datapath) |> 
+      filter(Status != "Cancelled") |> 
       select(Date, `Start Time`, `What is the topic of your consultation?`, `What can I help you with during our consult? Please provide as much information as possible so I can prepare.`) |> 
       mutate(`Start Date` = paste(Date, `Start Time`)) |>
       mutate(`Start Date` = format(as_datetime(`Start Date`), "%Y-%m-%d %H:%M")) |> 
