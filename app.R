@@ -1,15 +1,15 @@
 
 # Created by Lorin Bruckner for UNC Chapel Hill Libraries (lorin.bruckner@unc.edu)
 
+#Before pushing to github:
+#export(appdir = ".", destdir = "docs")
+
 library(shiny)
 library(bslib)
 library(tidyverse)
 library(shinycssloaders)
 library(shinyjs)
 library(lubridate)
-
-#Before pushing to github:
-#export(appdir = ".", destdir = "docs")
 
 #Workaround for Chromium issue that prevents file downloads
 downloadButton <- function(...) {
@@ -270,9 +270,10 @@ ui <- fluidPage(
   
   useShinyjs(),
   tags$head(
-    tags$title(paste("AutoStats", vn)),
     tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
   ),
+  
+  title = paste("AutoStats", vn),
   
   div(class = "title", 
       titlePanel(title = "AutoStats", windowTitle = "AutoStats 3.0"),
