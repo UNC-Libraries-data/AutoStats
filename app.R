@@ -8,6 +8,9 @@ library(shinycssloaders)
 library(shinyjs)
 library(lubridate)
 
+#Before pushing to github:
+#export(appdir = ".", destdir = "docs")
+
 # downloadButton <- function(...) {
 #   tag <- shiny::downloadButton(...)
 #   tag$attribs$download <- NULL
