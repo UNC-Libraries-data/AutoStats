@@ -11,11 +11,12 @@ library(lubridate)
 #Before pushing to github:
 #export(appdir = ".", destdir = "docs")
 
-# downloadButton <- function(...) {
-#   tag <- shiny::downloadButton(...)
-#   tag$attribs$download <- NULL
-#   tag
-# }
+#Workaround for Chromium issue that prevents file downloads
+downloadButton <- function(...) {
+  tag <- shiny::downloadButton(...)
+  tag$attribs$download <- NULL
+  tag
+}
 
 # Track version number
 vn <- "v3.0"
