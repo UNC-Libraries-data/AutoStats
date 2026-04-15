@@ -1,8 +1,8 @@
 
 # Created by Lorin Bruckner for UNC Chapel Hill Libraries (lorin.bruckner@unc.edu)
 
-#Before pushing to github:
-#export(appdir = ".", destdir = "docs")
+# Before pushing to github:
+# export(appdir = ".", destdir = "docs")
 
 library(shiny)
 library(bslib)
@@ -11,7 +11,7 @@ library(shinycssloaders)
 library(shinyjs)
 library(lubridate)
 
-#Workaround for Chromium issue that prevents file downloads
+# Workaround for Chromium issue that prevents file downloads
 downloadButton <- function(...) {
   tag <- shiny::downloadButton(...)
   tag$attribs$download <- NULL
@@ -19,7 +19,7 @@ downloadButton <- function(...) {
 }
 
 # Track version number
-vn <- "v3.0"
+vn <- "v3.01"
 
 
 # UI Tabs ----
@@ -317,7 +317,7 @@ server <- function(input, output) {
     # Check for problems with the uploaded file
     tryCatch({
       read_csv(input$libcalUp$datapath) |> 
-        select(Date, `What is the topic of your consultation?`, `What can I help you with during our consult? Please provide as much information as possible so I can prepare.`)
+        select(Date, contains("topic of your consultation?"), contains("What can I help you with during our consult?"))
     }, 
     error = function(e) {
       libcal_noError(FALSE)
@@ -368,14 +368,14 @@ server <- function(input, output) {
     
     libCaldf <- read_csv(input$libcalUp$datapath) |> 
       filter(Status != "Cancelled") |> 
-      select(Date, `Start Time`, `What is the topic of your consultation?`, `What can I help you with during our consult? Please provide as much information as possible so I can prepare.`) |> 
+      select(Date, `Start Time`, contains("topic of your consultation?"), contains("What can I help you with during our consult?")) |> 
       mutate(`Start Date` = paste(Date, `Start Time`)) |>
       mutate(`Start Date` = format(as_datetime(`Start Date`), "%Y-%m-%d %H:%M")) |> 
       select(-c(Date, `Start Time`)) |> 
-      rename(`Topic(s) of Consultation:` = `What is the topic of your consultation?`) |> 
+      rename(`Topic(s) of Consultation:` = contains("topic of your consultation?")) |> 
       mutate(`Topic(s) of Consultation:` = str_replace_all(`Topic(s) of Consultation:`,",", ";")) |> 
       mutate(`Topic(s) of Consultation:` = str_replace_all(`Topic(s) of Consultation:`,"N/A", "")) |>
-      rename(`Additional Information` = `What can I help you with during our consult? Please provide as much information as possible so I can prepare.`) |> 
+      rename(`Additional Information` = contains("What can I help you with during our consult?")) |> 
       mutate(`Internal Notes` = paste("Created with AutoStats", vn)) |> 
       mutate(`Entered By` = paste(input$lcLast, input$lcFirst, sep = ", ")) |> 
       mutate(`What type of question is this?` = "Research/Reference")|> 
